@@ -1,0 +1,81 @@
+surface
+AQSIS_V 1.6.0
+
+
+segment Data
+
+USES 442370
+
+param uniform  float blend
+param uniform  string imageA
+param uniform  string imageB
+varying  color CtA
+varying  color CtB
+
+
+segment Init
+	pushif 0
+	pop blend
+	pushis ""
+	pop imageA
+	pushis ""
+	pop imageB
+
+
+segment Code
+	S_CLEAR
+	pushis ""
+	pushv imageA
+	ness
+	S_GET
+	RS_PUSH
+	RS_GET
+	RS_JZ 1
+	pushif 0
+	pushv imageA
+	pushif 0
+	ctexture1
+	pop CtA
+:1
+	RS_INVERSE
+	RS_JZ 0
+	pushif 1
+	setfc
+	pop CtA
+:0
+	RS_POP
+	S_CLEAR
+	pushis ""
+	pushv imageB
+	ness
+	S_GET
+	RS_PUSH
+	RS_GET
+	RS_JZ 3
+	pushif 0
+	pushv imageB
+	pushif 0
+	ctexture1
+	pop CtB
+:3
+	RS_INVERSE
+	RS_JZ 2
+	pushif 1
+	setfc
+	pop CtB
+:2
+	RS_POP
+	pushv Os
+	pop Oi
+	pushv CtA
+	pushv blend
+	pushif 1
+	subff
+	mulfc
+	pushv CtB
+	pushv blend
+	mulfc
+	addcc
+	pushv Os
+	mulcc
+	pop Ci
